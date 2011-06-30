@@ -103,6 +103,23 @@ class TestGraylog2Exceptions < Test::Unit::TestCase
     # the user via puts
     assert_nil c.send_to_graylog2(ex)
   end
+  
+  def test_args_are_not_shared_in_dup
+    c = Graylog2Exceptions.new(nil, {})
+    assert_equal Socket.gethostname, c.args[:local_app_name]
+    assert_equal "localhost", c.args[:hostname]
+    assert_equal 12201, c.args[:port]
+    assert_equal 'LAN', c.args[:max_chunk_size]
+    assert_equal 3, c.args[:level]
+
+    c.call nil rescue
+
+    assert_equal Socket.gethostname, c.args[:local_app_name]
+    assert_equal "localhost", c.args[:hostname]
+    assert_equal 12201, c.args[:port]
+    assert_equal 'LAN', c.args[:max_chunk_size]
+    assert_equal 3, c.args[:level]
+  end
 
   private
 

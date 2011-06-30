@@ -18,6 +18,11 @@ class Graylog2Exceptions
     @args = standard_args.merge(args)
     @app = app
   end
+  
+  def initialize_copy(source)
+    super
+    @args = @args.dup
+  end
 
   def call(env)
     # Make thread safe
