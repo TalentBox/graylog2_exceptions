@@ -32,7 +32,7 @@ class Graylog2Exceptions
   def _call(env)
     begin
       # Call the app we are monitoring
-      @app.call(env)
+      response = @app.call(env)
     rescue => err
       # An exception has been raised. Send to Graylog2!
       send_to_graylog2(err)
@@ -40,6 +40,11 @@ class Graylog2Exceptions
       # Raise the exception again to pass back to app.
       raise
     end
+
+    # Handle exception in async context
+    send_to_graylog2(env['rack.exception']) if env['rack.exception']
+
+    response
   end
 
   def send_to_graylog2 err
