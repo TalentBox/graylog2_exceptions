@@ -33,7 +33,7 @@ class Graylog2Exceptions
     begin
       # Call the app we are monitoring
       response = @app.call(env)
-    rescue => err
+    rescue Exception => err
       # An exception has been raised. Send to Graylog2!
       send_to_graylog2(err)
 
